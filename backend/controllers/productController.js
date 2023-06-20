@@ -34,3 +34,77 @@ exports.getAllProducts = async (req, res) => {
     res.status(500).send({ message: "Internal server Error" });
   }
 };
+
+// put: Update Product
+exports.updateProducts = async (req, res) => {
+  try {
+    let product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Product not found" });
+    }
+    product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+
+    res.status(200).send({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    console.log("Error:updateProducts", error);
+    res.status(500).send(error);
+  }
+};
+
+// delete : deleteProduct
+
+exports.deleteProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      res.status(404).send({
+        success: false,
+        message: "Product not found!",
+      });
+    }
+
+    await Product.findByIdAndRemove(req.params.id);
+
+    res.status(200).send({
+      success: true,
+      message: "product deleted",
+    });
+  } catch (error) {
+    console.log("Error:deleteProducts", error);
+    res.status(500).send(error);
+  }
+};
+
+//GET: getProductDetails
+
+exports.getProductDetails = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      res.status(404).send({
+        success: false,
+        message: "Product not found!",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    console.log("Error:getProductDetails", error);
+    res.status(500).send(error);
+  }
+};
