@@ -12,9 +12,6 @@ const connectDatabase = () => {
     .then((data) => {
       console.log(`Mongodb connected with server: ${data.connection.host}`);
       // console.log(`Mongodb connected with server`);
-    })
-    .catch((err) => {
-      console.log("Error in DB Connection", err);
     });
 };
 
