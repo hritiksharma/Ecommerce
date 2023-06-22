@@ -42,9 +42,7 @@ exports.updateProducts = async (req, res) => {
     let product = await Product.findById(req.params.id);
 
     if (!product) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Product not found" });
+      return next(new ErrorHandler("Product not found", 404));
     }
     product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -69,10 +67,7 @@ exports.deleteProduct = async (req, res) => {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-      res.status(404).send({
-        success: false,
-        message: "Product not found!",
-      });
+      return next(new ErrorHandler("Product not found", 404));
     }
 
     await Product.findByIdAndRemove(req.params.id);
