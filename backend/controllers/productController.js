@@ -1,5 +1,6 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
 const Product = require("../models/productModel");
+const ApiFeatures = require("../utils/apiFeatures");
 const ErrorHandler = require("../utils/errorHandler");
 
 // POST: Create a Product          --admin
@@ -16,16 +17,21 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 
 // GET - GET ALL Products
 exports.getAllProducts = catchAsyncError(async (req, res) => {
-  const products = await Product.find();
+  const resultPerPage = 5;
 
-  if (products.length > 0) {
-    res.status(200).json({
-      success: true,
-      products,
-    });
-  } else {
-    res.status(404).send({ message: "Products are empty" });
-  }
+  const productCount = await Product.countDocuments();
+  const apiFeatures = new ApiFeatures(Product.find(), req.query)
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+
+  const products = await apiFeatures.query;
+
+  res.status(200).json({
+    success: true,
+    products,
+    productCount,
+  });
 });
 
 // put: Update Product
