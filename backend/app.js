@@ -5,9 +5,10 @@ const errorMiddleware = require("./middleware/error");
 const app = express();
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
+const cookieParser = require("cookie-parser");
 
 app.use(express.json());
-
+app.use(cookieParser());
 app.use("/app/v1", productRoutes);
 app.use("/app/v1", userRoutes);
 
