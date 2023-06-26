@@ -15,3 +15,20 @@ exports.isAuthenticatedUser = catchAsyncError(async (req, res, next) => {
   req.user = await User.findById(decodedData.id);
   next();
 });
+
+exports.authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    console.log("====================================");
+    console.log("inside the authrizeRole", req.user);
+    console.log("====================================");
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new ErrorHandler(
+          `Role: ${req.user.role} is not authorized to do this`,
+          403
+        )
+      );
+    }
+    next();
+  };
+};
