@@ -9,8 +9,8 @@ const cookieParser = require("cookie-parser");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/app/v1", productRoutes);
-app.use("/app/v1", userRoutes);
+app.use("/api/v1", productRoutes);
+app.use("/api/v1", userRoutes);
 
 // Middleware for error
 
