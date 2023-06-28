@@ -214,19 +214,35 @@ exports.getSingleUser = catchAsyncError(async (req, res, next) => {
   });
 });
 
-// update User Role...
+// update User Role... (Admin)
 exports.updateUserRole = catchAsyncError(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  // const user = await User.findById(req.params.id);
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+  };
 
-  if (!user) {
-    return next(new ErrorHandler("User not Found in the list", 404));
-  }
-
-  user.role = req.body.role;
-  await user.save();
+  await User.findByIdAndUpdate(req.user.id, newUserData, {
+    new: true,
+    runValidators: true,
+    userFindAndModify: true,
+  });
 
   res.status(200).json({
     success: true,
-    user,
+  });
+});
+
+// delete user (Admin)
+exports.deleteUser = catchAsyncError(async (req, res, next) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
   });
 });
