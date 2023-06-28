@@ -133,8 +133,97 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
+// Get User Details
 exports.getUserDetail = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user.id);
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// To Changes Password
+exports.changePassword = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+
+  if (!isPasswordMatched) {
+    return next(new ErrorHandler("Incorrect Email and password", 400));
+  }
+
+  if (req.body.newPassword !== req.body.confirmPassword) {
+    return next(new ErrorHandler("password not matched", 400));
+  }
+
+  if (req.body.oldPassword !== req.body.newPassword) {
+    return next(new ErrorHandler("old and new Password are same", 400));
+  }
+
+  user.password = req.body.newPassword;
+
+  await user.save();
+  sendToken(user, 200, res);
+});
+
+// update profile...
+exports.updateProfile = catchAsyncError(async (req, res) => {
+  //  user.findByIdAndUpdate = User.findById
+
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+  };
+
+  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+    new: true,
+    runValidators: true,
+    userFindAndModify: false,
+  });
+
+  res.statue(200).json({
+    success: true,
+  });
+});
+
+// GET: Gel All Users (Admin)
+
+exports.getAllUsers = catchAsyncError(async (req, res) => {
+  const users = await User.find();
+
+  res.status(200).json({
+    success: true,
+    users,
+  });
+});
+
+// GET: Get SingleUser (Admin)
+exports.getSingleUser = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(
+      new ErrorHandler(`User does not exist with id: ${req.params.id}`)
+    );
+  }
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// update User Role...
+exports.updateUserRole = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not Found in the list", 404));
+  }
+
+  user.role = req.body.role;
+  await user.save();
 
   res.status(200).json({
     success: true,
