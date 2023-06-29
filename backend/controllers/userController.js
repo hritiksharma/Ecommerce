@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+
 // POST: Register API
 exports.register = catchAsyncError(async (req, res) => {
   const { name, email, password, avatar } = req.body;
@@ -59,7 +60,6 @@ exports.logout = catchAsyncError(async (req, res) => {
 });
 
 //POST: Forgot Password
-
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
@@ -100,7 +100,6 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 });
 
 // RESET Password
-
 exports.resetPassword = catchAsyncError(async (req, res, next) => {
   const resetPasswordToken = crypto
     .createHash("sha256")
@@ -169,8 +168,6 @@ exports.changePassword = catchAsyncError(async (req, res, next) => {
 
 // update profile...
 exports.updateProfile = catchAsyncError(async (req, res) => {
-  //  user.findByIdAndUpdate = User.findById
-
   const newUserData = {
     name: req.body.name,
     email: req.body.email,
@@ -188,7 +185,6 @@ exports.updateProfile = catchAsyncError(async (req, res) => {
 });
 
 // GET: Gel All Users (Admin)
-
 exports.getAllUsers = catchAsyncError(async (req, res) => {
   const users = await User.find();
 
@@ -244,5 +240,6 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
+    message: "User delete successfully",
   });
 });
