@@ -3,6 +3,8 @@ const {
   getSingleOrder,
   myOrders,
   getAllOrders,
+  updateOrder,
+  deleteOrder,
 } = require("../controllers/orderController");
 
 const express = require("express");
@@ -27,5 +29,25 @@ router.get(
   getAllOrders
 );
 
+router.put(
+  "/admin/order/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  updateOrder
+);
+
+router.put(
+  "/admin/order/:id",
+  isAuthenticatedUser,
+  authorizeRoles,
+  updateOrder
+);
+
+router.delete(
+  "/admin/order/:id",
+  isAuthenticatedUser,
+  authorizeRoles,
+  deleteOrder
+);
 //
 module.exports = router;
