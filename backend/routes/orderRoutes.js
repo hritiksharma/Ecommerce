@@ -2,6 +2,9 @@ const {
   newOrder,
   getSingleOrder,
   myOrders,
+  getAllOrders,
+  updateOrder,
+  deleteOrder,
 } = require("../controllers/orderController");
 
 const express = require("express");
@@ -17,4 +20,34 @@ router.get("/order/:id", isAuthenticatedUser, getSingleOrder);
 
 // GET: get all order of user
 router.get("/orders/me", isAuthenticatedUser, myOrders);
+
+// GET: get all orders --Admin
+router.get(
+  "/admin/orders",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  getAllOrders
+);
+
+router.put(
+  "/admin/order/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  updateOrder
+);
+
+router.put(
+  "/admin/order/:id",
+  isAuthenticatedUser,
+  authorizeRoles,
+  updateOrder
+);
+
+router.delete(
+  "/admin/order/:id",
+  isAuthenticatedUser,
+  authorizeRoles,
+  deleteOrder
+);
+//
 module.exports = router;
