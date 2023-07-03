@@ -39,14 +39,14 @@ router.put(
 router.put(
   "/admin/order/:id",
   isAuthenticatedUser,
-  authorizeRoles,
+  authorizeRoles("admin"),
   updateOrder
 );
 
 router.delete(
   "/admin/order/:id",
   isAuthenticatedUser,
-  authorizeRoles,
+  authorizeRoles("admin"),
   deleteOrder
 );
 //
