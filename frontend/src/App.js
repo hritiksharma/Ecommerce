@@ -1,10 +1,12 @@
 import "./App.css";
-import Header from "./components/Header";
+import Header from "./components/layout/Header";
+import { BrowserRouter as Router } from "react-router-dom";
 function App() {
   return (
     <>
-      <Header />
-      <h1>Ecommerce by hritik sharma</h1>
+      <Router>
+        <Header />
+      </Router>
     </>
   );
 }
