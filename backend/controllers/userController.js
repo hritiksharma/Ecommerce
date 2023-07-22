@@ -243,3 +243,4 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
     message: "User delete successfully",
   });
 });
+
